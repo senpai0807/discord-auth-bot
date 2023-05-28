@@ -60,7 +60,7 @@ module.exports = {
     }
 
     const key =
-      generate(6) + "-" + generate(6) + "-" + generate(6) + "-" + generate(6);
+      generate(4) + "-" + generate(4) + "-" + generate(4) + "-" + generate(4);
 
       const newKey = new Key({
         key,
@@ -79,11 +79,20 @@ module.exports = {
           .setTimestamp()
           .setFooter({ text: serverInfo.serverName, iconURL: serverInfo.thumbnail })
         await interaction.reply({ embeds: [embed] });
-      })
-      .catch(async (err) => {
+
+        let keysJSON;
+        try {
+          keysJSON = JSON.parse(fs.readFileSync('keys.json'));
+        } catch(err) {
+          keysJSON = [];
+        }
+        keysJSON.push(newKey);
+        fs.writeFileSync('keys.json', JSON.stringify(keysJSON, null, 2));
+
+      }).catch(async (err) => {
         console.error(err);
         await interaction.reply({ content: 'Something went wrong with the key generation.', ephemeral: true });
-      });
+    });
   },
 };
 
