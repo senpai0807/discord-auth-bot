@@ -21,8 +21,7 @@ module.exports = {
     const bindChannel = server.channels.cache.find(channel => channel.name === "bind-key");
 
     const serverData = JSON.parse(fs.readFileSync('serverInfo.json'));
-    const guildId = interaction.guildId;
-    const serverInfo = serverData[guildId];
+    const serverInfo = serverData;
 
     const key = options.getString('key');
 
