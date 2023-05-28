@@ -1,6 +1,6 @@
 const Key = require('../../Structures/Schemas/KeysDB');
 const fs = require('fs');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'messageCreate',
@@ -40,7 +40,7 @@ module.exports = {
     const member = message.guild.members.cache.get(message.author.id);
     await member.roles.add(roleId);
 
-    const bindedEmbed = new MessageEmbed()
+    const bindedEmbed = new EmbedBuilder()
       .setTitle(`Welcome to LunarAIO 🌙`)
       .setColor(serverInfo.hexColor)
       .setDescription(`Welcome ${message.author.username}, to Lunar AIO`)
