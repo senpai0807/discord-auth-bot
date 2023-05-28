@@ -30,10 +30,6 @@ module.exports = {
 
     keyDoc.userId = null;
 
-    const cooldownDate = new Date();
-    cooldownDate.setDate(cooldownDate.getDate() + 30);
-    keyDoc.unbindCooldown = cooldownDate;
-
     await keyDoc.save();
 
     await interaction.reply("Key unbound");
