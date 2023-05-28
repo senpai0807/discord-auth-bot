@@ -1,11 +1,11 @@
-const { SlashCommandBuilder, CommandInteraction, PermissionFlagsBits } = require('discord.js');
-const fetch = require('node-fetch');
-const settings = require("../../Structures/config.json");
+const { SlashCommandBuilder, CommandInteraction, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const Key = require('../../Structures/Schemas/KeysDB');
+const fs = require('fs');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('reset')
-    .setDescription('Reset key command')
+    .setDescription('Reset active devices command')
     .setDefaultMemberPermissions(PermissionFlagsBits.UseApplicationCommands),
     
   /**
@@ -14,27 +14,26 @@ module.exports = {
    */
   async execute(interaction) {
     const user = interaction.user;
-    var date = new Date();
-    var payload = {
-      client: user.id,
-      avatar: user.avatar,
-      date: date.toLocaleDateString(),
-    };
+    const serverData = JSON.parse(fs.readFileSync('serverInfo.json'));
+    const serverInfo = serverData;
 
-    fetch(`${settings.siteBase}/user/key/reset`, {
-      headers: {
-        "content-type": "application/json",
-      },
-      referrerPolicy: "strict-origin-when-cross-origin",
-      body: JSON.stringify(payload),
-      method: "POST",
-      mode: "cors",
-    }).then((response) => {
-      response.json().then(function (json) {
-        if (json["status"] === "reset") {
-          interaction.reply("Key reset");
-        }
-      });
-    });
+    const userKey = await Key.findOne({ userId: user.id });
+
+    if (!userKey) {
+      return interaction.reply('No license key found for this user.');
+    }
+
+    userKey.activeDevices = [];
+
+    await userKey.save();
+
+    const resetEmbed = new EmbedBuilder()
+    .setTitle('Success')
+    .setColor(serverInfo.hexColor)
+    .setDescription('Key has successfully been reset!')
+    .setTimestamp()
+    .setFooter({ text: serverInfo.serverName, iconURL: serverInfo.thumbnail });
+
+    interaction.reply({ embeds: [ resetEmbed] });
   }
 };
