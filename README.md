@@ -26,3 +26,6 @@ Next updates:
 
 # Usage
 I don't really care if you pull this git and make it your own. I made this specifically because I don't see many discord auth bots be open-sourced. 
+
+# Notes
+This auth bot is created with DiscordJS v13 using interactions so users can't bind the keys through DMs. You'll have to create a channel named "bind-keys" and set the View Channel permission to let everyone see. The bot will automatically remove the permission for them to see after they bind their key. The resonse is also ephemeral so you don't have to worry about others seeing. But if you're still worried about that, then you're more than welcome to rewrite the entire bot to use MessageCreate instead of interactions.
