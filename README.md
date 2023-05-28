@@ -20,7 +20,6 @@ npm start
 
 # Road Of Development
 Next updates: 
-- Removing the use of a sitebase and have it locally running using Express server.
 - Update /reset command to work with the removal of the sitebase.
 - Add stripe integration to setup subscription for renewals.
 
@@ -47,3 +46,54 @@ const now = new Date();
 keyDoc.unbindCooldown = new Date(now.setDate(now.getDate() + 45));
 ```
 then navigate to Structures/Schemas/KeysDB.js and remove `unbindCooldown: Date`
+
+# If you would like it to be completely plug and play. Within your application, you can add this:
+```
+const axios = require('axios');
+const inquirer = require('inquirer');
+
+async function promptForLicense() {
+  const questions = [
+    {
+      type: 'input',
+      name: 'licenseKey',
+      message: 'Enter your license key:',
+    },
+  ];
+
+  const { licenseKey } = await inquirer.prompt(questions);
+
+  return licenseKey;
+}
+
+async function authenticateUser(licenseKey) {
+  console.log(`Sending license key to server: ${licenseKey}`);
+  try {
+    const response = await axios.post('http://localhost:3000/auth', {
+      licenseKey,
+    });
+
+    if (response.status === 200) {
+      return {
+        discordId: response.data.discordId,
+        discordName: response.data.discordName,
+      };
+    }
+  } catch (err) {
+    console.error('Authentication failed:', err.message);
+    return false;
+  }
+}
+
+(async () => {
+  const licenseKey = await promptForLicense();
+  const user = await authenticateUser(licenseKey);
+
+  if (!user) {
+    console.log('Invalid license key. Shutting down.');
+    process.exit(1);
+  }
+
+  console.log(`Welcome ${user.discordName}!`);
+```
+Make sure if you make any changes to the port, you make the changes in both the auth bot and where it says `const response = await axios.post('http://localhost:3000/auth'`
