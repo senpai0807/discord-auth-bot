@@ -20,7 +20,6 @@ npm start
 
 # Road Of Development
 Next updates: 
-- Integrate something that deletes the keys after x amount of time
 - Removing the use of a sitebase and have it locally running using Express server.
 - Update /reset command to work with the removal of the sitebase.
 - Add stripe integration to setup subscription for renewals.
