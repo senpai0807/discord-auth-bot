@@ -20,6 +20,7 @@ npm start
 
 # Road Of Development
 Next updates: 
+- Integrate something that deletes the keys after x amount of time
 - Removing the use of a sitebase and have it locally running using Express server.
 - Update /reset command to work with the removal of the sitebase.
 - Add stripe integration to setup subscription for renewals.
@@ -27,5 +28,23 @@ Next updates:
 # Usage
 I don't really care if you pull this git and make it your own. I made this specifically because I don't see many discord auth bots be open-sourced. 
 
+# Commands
+```
+# Slash Commands
+- /help: Displays instructions to user.
+- /key: Displays status of the key such as license key, exp, etc
+- /generate <password> <type>: Admin command to generate license keys
+- /getunbindedkeys: Admin command to display all keys that are currently unbinded
+
+# Prefix Commands
+- !bind <key>: Binds key to user
+- !unbind <key>: Unbinds key from user
+```
+
 # Notes
-This auth bot is created with DiscordJS v13 using interactions so users can't bind the keys through DMs. You'll have to create a channel named "bind-keys" and set the View Channel permission to let everyone see. The bot will automatically remove the permission for them to see after they bind their key. The resonse is also ephemeral so you don't have to worry about others seeing. But if you're still worried about that, then you're more than welcome to rewrite the entire bot to use MessageCreate instead of interactions.
+I have an unbind cooldown hard set, if you would like that removed, just navigate to the bind commmand located in Events/Bind Commands and remove these lines
+```
+const now = new Date();
+keyDoc.unbindCooldown = new Date(now.setDate(now.getDate() + 45));
+```
+then navigate to Structures/Schemas/KeysDB.js and remove `unbindCooldown: Date`
