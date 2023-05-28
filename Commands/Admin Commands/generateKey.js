@@ -52,7 +52,7 @@ module.exports = {
         expiryDate.setDate(date.getDate() + 30);
         break;
       case 'lifetime':
-        expiryDate = null;
+        expiryDate.setFullYear(date.getFullYear() + 999);
         break;
       default:
         await interaction.reply({ content: 'Invalid key type.', ephemeral: true });
