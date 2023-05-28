@@ -36,6 +36,10 @@ module.exports = {
     
     await keyDoc.save();
 
+    const roleId = serverInfo.roleId;
+    const member = message.guild.members.cache.get(message.author.id);
+    await member.roles.add(roleId);
+
     const bindedEmbed = new MessageEmbed()
       .setTitle(`Welcome to LunarAIO 🌙`)
       .setColor(serverInfo.hexColor)
