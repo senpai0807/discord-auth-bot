@@ -1,13 +1,13 @@
 {
-    "token": "MTA4MjExNjcyNjY3OTkyODkwMg.GLMHhZ.9D44cDTaNp87Zygtbs-j5mGHZREtzNJLJjgJYE",
-    "DeveloperGuild": "1079639548138627133",
-    "DeveloperID": "337405228238241793",
-    "ClientID": "1034989212212154418",
-    "DatabaseURL": "mongodb+srv://Administrator:Vd8BSEr9nZ0EGsrt@boombapshelper.sjxya.mongodb.net/BoombapsHelper?retryWrites=true&w=majority",
-    "password": "Zombies360zKX65@",
-    "admin": "337405228238241793",
-    "webhook": "https://discord.com/api/webhooks/1112223598199971922/wFLH7ejtGa1DJCyS9SOL-bMpGg4sk9k7c0MCLoDHsM2w1aYJWtufOLIuc2sJCXs6NWuf",
-    "serverID": "1079639548138627133",
-    "botID": "1082116726679928902",
+    "token": "",
+    "DeveloperGuild": "",
+    "DeveloperID": "",
+    "ClientID": "",
+    "DatabaseURL": "",
+    "password": "",
+    "admin": "",
+    "webhook": "",
+    "serverID": "",
+    "botID": "",
     "siteBase": ""
 }
