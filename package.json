@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "ascii-table": "^0.0.9",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "discord-webhook-node": "^1.1.8",
+    "discord.js": "^14.11.0",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "glob": "^8.1.0",
+    "mongoose": "^7.0.2",
+    "nedb": "^1.8.0",
+    "node-fetch": "^2.6.11"
+  },
+  "name": "lunaraio-auth-bot",
+  "version": "1.0.0",
+  "description": "A discord auth bot for your application.",
+  "main": "./Structures/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node ./Structures/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "senpai#0807",
+  "license": "ISC"
+}
