@@ -55,5 +55,44 @@ setInterval(async () => {
 
 }, 60 * 60 * 1000);
 
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const port = 3000;
+
+app.use(express.static('public'));
+
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post('/auth', async (req, res) => {
+    const { licenseKey } = req.body;
+        console.log(`Received license key: ${licenseKey}`);
+
+    const userKey = await Key.findOne({ key: licenseKey });
+        console.log(`Found userKey in database: ${JSON.stringify(userKey)}`);
+
+    if (!userKey) {
+        return res.status(401).json({ message: 'Authentication failed: Invalid discordId or licenseKey.' });
+    }
+
+    if (userKey.expires < new Date()) {
+        return res.status(401).send('Authentication failed: License key has expired.');
+    }
+
+    const user = await client.users.fetch(userKey.userId);
+
+    res.json({
+        message: 'Authentication successful.',
+        discordId: userKey.userId,
+        discordName: user.username,
+      });
+});
+
+app.listen(port, () => console.log(`Server is running on port ${port}.`));
+
 
 client.login(client.config.token);
