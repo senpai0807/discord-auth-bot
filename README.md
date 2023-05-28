@@ -1,6 +1,7 @@
 # Discord Auth Bot For Your Applications 🌙
 ## How To Use
-This bot is pretty much plug and play. Navigate to the config.json located in the Structures folder and input the following inputs listed.
+This bot is pretty much plug and play. Navigate to the config.json located in the Structures folder and fill out all nessessary inputs. 
+The next thing you need to do it navigate to the serverInfo.json file to set your serverName, thumbnail, and hexColor. (This will be the info displayed on the embeds.)
 After inputting everything, simply run `npm install or npm i`
 Then run `npm start`
 
@@ -18,8 +19,10 @@ npm start
 ```
 
 # Road Of Development
-I plan to make regular updates. The first update is removing the use ndeb and using mongoose/mongodb instead.
-Another update I will make is removing the use of a sitebase and have the keys that are generated validated within local machine that the discord bot will be hosted at and also storing the generated keys into the mongodb database.
+Next updates: 
+- Removing the use of a sitebase and have it locally running using Express server.
+- Update /reset command to work with the removal of the sitebase.
+- Add stripe integration to setup subscription for renewals.
 
 # Usage
 I don't really care if you pull this git and make it your own. I made this specifically because I don't see many discord auth bots be open-sourced. 
