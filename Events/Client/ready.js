@@ -5,7 +5,6 @@ module.exports = {
     once: true,
     execute(client) {
         console.log(`Logged in as ${client.user.username}`);
-        client.user.setActivity(`LunarAIO`, { type: "COMPETING" });
 
         loadCommands(client);
     }
