@@ -32,6 +32,12 @@ module.exports = {
       return;
     }
 
+    const existingKey = await Key.findOne({ userId: user.id });
+    if (existingKey) {
+      await interaction.reply({ content: 'You already have a key bound to your account.', ephemeral: true });
+      return;
+    }
+
     if (keyDoc.userId && keyDoc.userId !== user.id) {
       await interaction.reply({ content: 'This key is already bound to another user.', ephemeral: true });
       return;
