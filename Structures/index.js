@@ -69,8 +69,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/auth', async (req, res) => {
-    const { licenseKey } = req.body;
-        console.log(`Received license key: ${licenseKey}`);
+    const { licenseKey, deviceName } = req.body;
+        console.log(`Received license key: ${licenseKey} from device: ${deviceName}`);
 
     const userKey = await Key.findOne({ key: licenseKey });
         console.log(`Found userKey in database: ${JSON.stringify(userKey)}`);
@@ -83,6 +83,16 @@ app.post('/auth', async (req, res) => {
         return res.status(401).send('Authentication failed: License key has expired.');
     }
 
+    if (userKey.activeDevices.length >= 2) {
+        return res.status(401).send('Authentication failed: Maximum number of devices using this license key has been reached.');
+    }
+
+
+    if (!userKey.activeDevices.includes(deviceName)) {
+        userKey.activeDevices.push(deviceName);
+        await userKey.save();
+    }
+    
     const user = await client.users.fetch(userKey.userId);
 
     res.json({
