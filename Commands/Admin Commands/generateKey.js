@@ -19,6 +19,11 @@ module.exports = {
           { name: 'Renewal', value: 'renewal' },
           { name: 'Lifetime', value: 'lifetime' }
         )
+    )
+    .addIntegerOption(option => 
+        option.setName('numkeys')
+        .setDescription('Number of keys to generate')
+        .setRequired(false)
     ),
   /**
    * 
@@ -26,7 +31,6 @@ module.exports = {
    */
   async execute(interaction) {
     const { options } = interaction;
-    const user = interaction.user;
 
     const serverData = JSON.parse(fs.readFileSync('serverInfo.json'));
     const serverInfo = serverData;
@@ -39,6 +43,7 @@ module.exports = {
     }
 
     const keytype = options.getString('keytype');
+    const numKeys = options.getInteger('numkeys') || 1;
 
     const date = new Date();
     let expiryDate = new Date();
@@ -59,40 +64,42 @@ module.exports = {
         return;
     }
 
-    const key =
-      generate(4) + "-" + generate(4) + "-" + generate(4) + "-" + generate(4);
+    for (let i = 0; i < numKeys; i++) {
+      const key =
+        generate(4) + "-" + generate(4) + "-" + generate(4) + "-" + generate(4);
 
-      const newKey = new Key({
-        key,
-        created: date,
-        expires: expiryDate,
-        keyType: keytype,
-      });      
+        const newKey = new Key({
+          key,
+          created: date,
+          expires: expiryDate,
+          keyType: keytype,
+        });      
 
-    newKey.save()
-      .then(async () => {
-        const embed = new EmbedBuilder()
-          .setTitle('Successfully Generated Key 🌙')
-          .setColor(serverInfo.hexColor)
-          .setDescription(`Key: ${key}\nExpires: ${expiryDate}\nType: ${keytype}`)
-          .setThumbnail(serverInfo.thumbnail)
-          .setTimestamp()
-          .setFooter({ text: serverInfo.serverName, iconURL: serverInfo.thumbnail })
-        await interaction.reply({ embeds: [embed] });
+      newKey.save()
+        .then(async () => {
+          const embed = new EmbedBuilder()
+            .setTitle('Successfully Generated Key 🌙')
+            .setColor(serverInfo.hexColor)
+            .setDescription(`Key: ${key}\nExpires: ${expiryDate}\nType: ${keytype}`)
+            .setThumbnail(serverInfo.thumbnail)
+            .setTimestamp()
+            .setFooter({ text: serverInfo.serverName, iconURL: serverInfo.thumbnail })
+          await interaction.reply({ embeds: [embed] });
 
-        let keysJSON;
-        try {
-          keysJSON = JSON.parse(fs.readFileSync('keys.json'));
-        } catch(err) {
-          keysJSON = [];
-        }
-        keysJSON.push(newKey);
-        fs.writeFileSync('keys.json', JSON.stringify(keysJSON, null, 2));
+          let keysJSON;
+          try {
+            keysJSON = JSON.parse(fs.readFileSync('keys.json'));
+          } catch(err) {
+            keysJSON = [];
+          }
+          keysJSON.push(newKey);
+          fs.writeFileSync('keys.json', JSON.stringify(keysJSON, null, 2));
 
-      }).catch(async (err) => {
-        console.error(err);
-        await interaction.reply({ content: 'Something went wrong with the key generation.', ephemeral: true });
-    });
+        }).catch(async (err) => {
+          console.error(err);
+          await interaction.reply({ content: 'Something went wrong with the key generation.', ephemeral: true });
+      });
+    }
   },
 };
 
