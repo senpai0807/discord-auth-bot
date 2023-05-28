@@ -4,10 +4,5 @@
     "DeveloperID": "",
     "ClientID": "",
     "DatabaseURL": "",
-    "password": "",
-    "admin": "",
-    "webhook": "",
-    "serverID": "",
-    "botID": "",
-    "siteBase": ""
+    "adminPassword": ""
 }
