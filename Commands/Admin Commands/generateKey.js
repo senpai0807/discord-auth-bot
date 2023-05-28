@@ -29,8 +29,7 @@ module.exports = {
     const user = interaction.user;
 
     const serverData = JSON.parse(fs.readFileSync('serverInfo.json'));
-    const guildId = interaction.guildId;
-    const serverInfo = serverData[guildId];
+    const serverInfo = serverData;
 
     const password = options.getString('password');
     
