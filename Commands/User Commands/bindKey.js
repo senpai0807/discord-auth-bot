@@ -38,6 +38,11 @@ module.exports = {
     }
 
     keyDoc.userId = user.id;
+    
+    // Set unbindCooldown to 45 days from now
+    const now = new Date();
+    keyDoc.unbindCooldown = new Date(now.setDate(now.getDate() + 45));
+    
     await keyDoc.save();
 
     const bindedEmbed = new EmbedBuilder()
