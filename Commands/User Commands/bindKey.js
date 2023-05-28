@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits } = require('discord.js');
-const fetch = require('node-fetch');
-const settings = require("../../Structures/config.json");
+const Key = require('../../Structures/Schemas/KeysDB');
+const fs = require('fs');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,38 +16,42 @@ module.exports = {
     const { options } = interaction;
     const user = interaction.user;
     let server = interaction.guild;
-    var memberRole = server.roles.cache.find((role) => role.name === "member");
+    var memberRole = server.roles.cache.get('1088740102370492466');
     let member = server.members.cache.get(user.id);
+    const bindChannel = server.channels.cache.find(channel => channel.name === "bind-key");
+
+    const serverData = JSON.parse(fs.readFileSync('serverInfo.json'));
+    const guildId = interaction.guildId;
+    const serverInfo = serverData[guildId];
 
     const key = options.getString('key');
-    const date = new Date();
-    const payload = {
-      user: key,
-      client: user.id,
-      avatar: user.avatar,
-      date: date.toLocaleDateString(),
-    };
 
-    fetch(`${settings.siteBase}/user/key/bind`, {
-      headers: {
-        "content-type": "application/json",
-      },
-      referrerPolicy: "strict-origin-when-cross-origin",
-      body: JSON.stringify(payload),
-      method: "POST",
-      mode: "cors",
-    }).then((response) => {
-      response.json().then(async function (json) {
-        if (json["status"] === "binded") {
-          await interaction.reply("Welcome to LunarAIO");
-          member.roles.add(memberRole);
-        } else {
-          await interaction.reply({ content: 'Something went wrong with the binding.', ephemeral: true });
-        }
-      });
-    }).catch(async (err) => {
-      console.error(err);
-      await interaction.reply({ content: 'Something went wrong with the binding.', ephemeral: true });
-    });
+    const keyDoc = await Key.findOne({ key: key });
+
+    if (!keyDoc || keyDoc.expires < Date.now()) {
+      await interaction.reply({ content: 'Invalid key or key has expired.', ephemeral: true });
+      return;
+    }
+
+    if (keyDoc.userId && keyDoc.userId !== user.id) {
+      await interaction.reply({ content: 'This key is already bound to another user.', ephemeral: true });
+      return;
+    }
+
+    keyDoc.userId = user.id;
+    await keyDoc.save();
+
+    const bindedEmbed = new EmbedBuilder()
+      .setTitle(`Welcome to LunarAIO 🌙`)
+      .setColor(serverInfo.hexColor)
+      .setDescription(`Welcome ${member}, to Lunar AIO`)
+      .setThumbnail(serverInfo.thumbnail)
+      .setTimestamp()
+      .setFooter({ text: serverInfo.serverName, iconURL: serverInfo.thumbnail });
+
+    await interaction.reply({ embeds: [bindedEmbed], ephemeral: true });
+    member.roles.add(memberRole);
+
+    bindChannel.permissionOverwrites.edit(member, { ViewChannel: false });
   },
 };
