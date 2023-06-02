@@ -118,4 +118,4 @@ async function authenticateUser(licenseKey) {
 
   console.log(`Welcome ${user.discordName}!`);
 ```
-Make sure if you make any changes to the port, you make the changes in both the auth bot and where it says `const response = await axios.post('http://localhost:3000/auth'`
+Make sure if you make any changes to the port, you make the changes in both the auth bot and where it says `const response = await axios.post('http://localhost:3000/auth'` => **Update:** You should use an application like Ngrok to forward the request of your express server to auth in your application so you can remove the need to host the application and auth bot on the same machine. In your application replace `const response = await axios.post('http://localhost:3000/auth'` with `const response = await axios.post('<Ngrok Endpoint>/auth'`
