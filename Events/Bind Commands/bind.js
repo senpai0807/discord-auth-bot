@@ -10,6 +10,7 @@ module.exports = {
 
     const serverData = JSON.parse(fs.readFileSync('serverInfo.json'));
     const serverInfo = serverData;
+    const guildId = serverData.guildId;
 
     const keyDoc = await Key.findOne({ key: key });
 
@@ -36,17 +37,22 @@ module.exports = {
     
     await keyDoc.save();
 
+    const guild = message.client.guilds.cache.get(guildId);
+    if (!guild) return message.reply('Error: Guild not found.');
+
+    const member = await guild.members.fetch(message.author.id);
+    if (!member) return message.reply('Error: Member not found in the guild.');
+
     const roleId = serverInfo.roleId;
-    const member = message.guild.members.cache.get(message.author.id);
     await member.roles.add(roleId);
 
     const bindedEmbed = new EmbedBuilder()
-      .setTitle(`Welcome to LunarAIO 🌙`)
+      .setTitle(`Welcome 🌙`)
       .setColor(serverInfo.hexColor)
-      .setDescription(`Welcome ${message.author.username}, to Lunar AIO`)
+      .setDescription(`Welcome ${message.author.username}, to Lunar Tools`)
       .setThumbnail(serverInfo.thumbnail)
       .setTimestamp()
-      .setFooter(serverInfo.serverName, serverInfo.thumbnail);
+      .setFooter({ text: serverInfo.serverName, iconURL: serverInfo.thumbnail });
 
     await message.reply({ embeds: [bindedEmbed] });
 }};
