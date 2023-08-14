@@ -45,14 +45,16 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setTitle(`Key Management`)
-      .addField('User', user.tag)
-      .addField('Key', keyStr)
+      .addFields(
+        { name: 'User', value: user.tag, inline: false },
+        { name: 'Key', value: keyStr, inline: false }
+        )
       .setTimestamp();
 
     if (action === 'bind') {
       keyDoc.userId = user.id;
       await keyDoc.save();
-      embed.setColor('GREEN');
+      embed.setColor('#5665DA');
       embed.setDescription(`Key ${keyStr} successfully bound to user ${user.tag}.`);
       await interaction.reply({ embeds: [ embed ] });
 
@@ -63,7 +65,7 @@ module.exports = {
       }
       keyDoc.userId = null;
       await keyDoc.save();
-      embed.setColor('RED');
+      embed.setColor('#5665DA');
       embed.setDescription(`Key ${keyStr} successfully unbound from user ${user.tag}.`);
       await interaction.reply({ embeds: [ embed ] });
     }
